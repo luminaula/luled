@@ -1,12 +1,18 @@
 #include <stdlib.h> // EXIT_SUCCESS
 
 #include "display.h"
+#include "ledarray.h"
 
 using namespace luled;
 
 int main(int, char**)
 {
 	Display display(2560, 1440);
+	LedArray ledArray(256);
+	for(auto i = 0; i < ledArray.size(); i++)
+	{
+		ledArray.setLed(i, i, i, i);
+	}
 	auto counter = 0;
 	while(!display.isClosed())
 	{
@@ -14,13 +20,11 @@ int main(int, char**)
 		display.clear(0x00000000);
 		for(auto j = 0; j < 72; j++)
 		{
-			for(auto i = 0; i < 256; i++)
+			for(auto i = 0; i < ledArray.size(); i++)
 			{
-				uint8_t r = i,
-						g = j * 3,
-						b = counter;
+				auto& led = ledArray.getLed(i);
 
-				display.drawSquare(i*10, j * 20, 10, r, g, b);
+				display.drawSquare(i*10, j * 20, 10, led.r, led.g, led.b);
 			}
 		}
 		counter++;
