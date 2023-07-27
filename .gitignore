@@ -1,9 +1,4 @@
-build
-CMakeFiles
-CMakeCache.txt
-cmake_install.cmake
-bin
-*.a
-.DS_Store
-luled-a
-Makefile
+.gitignore
+.vscode/
+build/
+.DS_Store/
