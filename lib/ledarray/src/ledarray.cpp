@@ -38,4 +38,6 @@ void LedArray::rot(int n)
 	rotr(n);
 }
 
+
+
 } // namespace luled
