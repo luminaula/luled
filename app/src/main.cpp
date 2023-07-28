@@ -28,6 +28,7 @@ int main(int, char**)
 			}
 		}
 		counter++;
+		ledArray.rot(1);
 		display.update();
 	}
 	return EXIT_SUCCESS;

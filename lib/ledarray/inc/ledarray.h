@@ -19,11 +19,16 @@ public:
 	~LedArray();
 
 	void setLed(size_t index, uint8_t r, uint8_t g, uint8_t b);
-	const Led<uint8_t>& getLed(size_t index) const { return leds[index]; }
+	const Led<uint8_t>& getLed(size_t index) const { return leds[(index + base) % leds.size()]; }
 	size_t size() const { return leds.size(); }
+
+	void rotr(int n = 1);
+	void rotl(int n = 1);
+	void rot(int n = 1);
 
 private:
 	std::vector<Led<uint8_t>> leds;
+	int base;
 };
 
 } // namespace luled
