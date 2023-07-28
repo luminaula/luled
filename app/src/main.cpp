@@ -18,13 +18,13 @@ int main(int, char**)
 	{
 		display.pollEvents();
 		display.clear(0x00000000);
-		for(auto j = 0; j < 72; j++)
+		for(auto j = 0; j < 5; j++)
 		{
 			for(auto i = 0; i < ledArray.size(); i++)
 			{
-				auto& led = ledArray.getLed(i);
+				auto& led = ledArray[i];
 
-				display.drawSquare(i*10, j * 20, 10, led.r, led.g, led.b);
+				display.drawSquare(i*10, j * 20 + 500, 10, led.r, led.g, led.b);
 			}
 		}
 		counter++;

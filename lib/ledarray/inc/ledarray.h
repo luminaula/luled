@@ -26,6 +26,8 @@ public:
 	void rotl(int n = 1);
 	void rot(int n = 1);
 
+	const Led<uint8_t>& operator[](size_t index) const { return getLed(index); }
+
 private:
 	std::vector<Led<uint8_t>> leds;
 	int base;
