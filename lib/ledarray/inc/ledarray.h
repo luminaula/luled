@@ -18,7 +18,7 @@ public:
 	LedArray(size_t count);
 	~LedArray();
 
-	void setLed(size_t index, uint8_t r, uint8_t g, uint8_t b);
+	void setLed(size_t index, uint8_t r, uint8_t g, uint8_t b, bool absolute = false);
 	const Led<uint8_t>& getLed(size_t index) const { return leds[(index + base) % leds.size()]; }
 	size_t size() const { return leds.size(); }
 

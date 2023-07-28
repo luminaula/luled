@@ -12,9 +12,12 @@ LedArray::LedArray(size_t count) :
 LedArray::~LedArray()
 {}
 
-void LedArray::setLed(size_t index, uint8_t r, uint8_t g, uint8_t b)
+void LedArray::setLed(size_t index, uint8_t r, uint8_t g, uint8_t b, bool absolute)
 {
-	auto& l = leds[index];
+	if(!absolute)
+		index = index + base;
+	
+	auto& l = leds[index % leds.size()];
 	l.r = r;
 	l.g = g;
 	l.b = b;

@@ -27,8 +27,20 @@ int main(int, char**)
 				display.drawSquare(i*10, j * 20 + 500, 10, led.r, led.g, led.b);
 			}
 		}
+		if(counter % 2 == 0)
+		{
+			ledArray.setLed(counter, counter, 0, 0, false);
+		}
+		else if(counter % 3 == 0)
+		{
+			ledArray.setLed(counter, 0, counter, 0, false);
+		}
+		else
+		{
+			ledArray.setLed(counter, counter, counter, counter, true);
+		}
 		counter++;
-		ledArray.rot(1);
+		ledArray.rot(2);
 		display.update();
 	}
 	return EXIT_SUCCESS;
