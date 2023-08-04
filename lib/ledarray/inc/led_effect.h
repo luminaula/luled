@@ -13,7 +13,7 @@ public:
 	LedEffect(std::function<void(LedArray&, uint8_t, uint8_t, uint8_t, int)> updateFunc, uint8_t r, uint8_t g, uint8_t b, int index = 0);
 	~LedEffect();
 
-	void operator()(LedArray& leds) { updateFunc(leds, r, g, b, index); }
+	LedEffect& operator()(LedArray& leds) { updateFunc(leds, r, g, b, index); return *this; }
 
 	LedEffect& operator++() { ++index; return *this; }
 	LedEffect& operator--() { --index; return *this; }

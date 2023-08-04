@@ -2,8 +2,8 @@ cmake_minimum_required(VERSION 3.26)
 
 project(luled)
 
-enable_language(C CXX)
-
+enable_language(C CXX ISPC)
+enable_testing()
 
 set(CMAKE_CXX_STANDARD 20)
 

@@ -1,24 +1,14 @@
 #pragma once
 
 #include <SDL2/SDL.h>
+#include <vector>
+
+#include "framebuffer.h"
+#include "shape.h"
 
 namespace luled
 {
 
-struct FrameBuffer
-{
-	FrameBuffer(int width, int height) : data(new uint32_t[width*height]), width(width), height(height) {}
-	~FrameBuffer() { if(data) delete[] data; }
-
-
-	void drawSquare(int x, int y, int size, uint32_t color);
-
-	void fill(uint32_t color);
-
-	uint32_t* data;
-	int width;
-	int height;
-};
 
 class Display
 {
@@ -57,6 +47,12 @@ public:
 					const uint32_t color);
 
 	void fill(uint32_t color);
+
+	void drawShape(const Shape& shape);
+	void drawShapes(const std::vector<Shape&>& shapes);
+
+	int width() const { return fb.width; }
+	int height() const { return fb.height; }
 
 private:
 	SDL_Texture* texture;

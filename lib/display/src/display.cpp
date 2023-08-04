@@ -3,24 +3,6 @@
 namespace luled
 {
 
-void FrameBuffer::drawSquare(int x, int y, int size, uint32_t color)
-{
-	if(x < 0 || y < 0 || x + size > width || y + size > height)
-		return;
-	for(int i = 0; i < size; i++)
-	{
-		for(int j = 0; j < size; j++)
-		{
-			data[(y + j) * width + (x + i)] = color;
-		}
-	}
-}
-
-void FrameBuffer::fill(uint32_t color)
-{
-	for(int i = 0; i < width*height; i++)
-		data[i] = color;
-}
 
 
 Display::Display(int width, int height) : fb(width, height)
@@ -38,7 +20,7 @@ void Display::init(int width, int height)
 
 	window = SDL_CreateWindow("LULED", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, SDL_WINDOW_OPENGL);
 	renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
-	texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STATIC, width, height);
+	texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STREAMING, width, height);
 }
 
 void Display::update()
@@ -61,6 +43,7 @@ void Display::clear(float r, float g, float b, float a)
 
 void Display::clear(uint32_t color)
 {
+	fill(color);
 	SDL_SetRenderDrawColor(renderer, color >> 24, color >> 16, color >> 8, color);
 	SDL_RenderClear(renderer);
 }
@@ -119,6 +102,11 @@ void Display::drawSquare(
 void Display::fill(uint32_t color)
 {
 	fb.fill(color);
+}
+
+void Display::drawShape(const Shape& shape)
+{
+	shape.draw(fb);
 }
 
 } // namespace luled
