@@ -13,6 +13,7 @@ public:
 
 	void draw(FrameBuffer& fb) const override;
 	void shift(float phase);
+	void rot(float angle);
 
 private:
 	float x1, y1, length, angle;

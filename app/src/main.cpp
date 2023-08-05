@@ -37,7 +37,7 @@ int main(int, char**)
 	Line2 line2(display.width() / 2, display.height() / 2, 100.0f, 0, 0xFF00FFFF);
 	Line2 line3(display.width() / 2, display.height() / 2, 100.0f, -M_PI, 0xFF00FFFF);
 
-	Wave wave(0, 1000, 2560, 0, 0, 0xFFFF0000);
+	Wave wave(500, 500, 2560, 0, 0, 0xFFFF0000);
 
 	color::Vec3F v1(1, 0, 0);
 
@@ -73,6 +73,7 @@ int main(int, char**)
 		line2.rot(0.01f);
 		line3.rot(0.01f);
 		wave.shift(0.1f);
+		wave.rot(0.01f);
 		
 		counter++;
 		//  ledArray.rot(2);
