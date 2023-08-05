@@ -37,8 +37,29 @@ int main(int, char**)
 	Line2 line2(display.width() / 2, display.height() / 2, 2560, 0, 0xFF0000FF);
 	Line2 line3(display.width() / 2, display.height() / 2, 2560, -M_PI, 0xFF0000FF);
 
-	Wave wave(display.width() / 2, display.height() / 2, 10, 2560, 0, 0, 0xFFFF0000);
-	Wave wave2(display.width() / 2, display.height() / 2, 15, 2560, M_PI, 0, 0xFF00FF00);
+	Wave wave(
+		display.width() / 2,
+		display.height() / 2,
+		2560,
+		0,
+		50.0f,
+		1.01f,
+		0,
+		0xFFFF0000,
+		0.001f,
+		0.f
+	);
+	Wave wave2(
+		display.width() / 2,
+		display.height() / 2,
+		2560,
+		M_PI,
+		50.0f,
+		3.0f,
+		0,
+		0xFF00FF00,
+		-0.001f
+	);
 
 	color::Vec3F v1(1, 0, 0);
 
