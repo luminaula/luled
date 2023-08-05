@@ -93,12 +93,19 @@ int main(int, char**)
 		display.drawShape(line3);
 		display.drawShape(wave);
 		display.drawShape(wave2);
-		line2.rot(0.01f);
-		line3.rot(0.01f);
-		wave.shift(0.1f);
+
+		const auto [x, y, angle] = wave.sampleAndAngle(counter % 500);
+
+
+		display.drawShape(Line2(x, y, 100, angle, 0xFF0000FF));
+
+
+		//line2.rot(0.01f);
+		//line3.rot(0.01f);
+		wave.shift(0.001f);
 		wave2.shift(-0.1f);
-		wave.rot(0.01f);
-		wave2.rot(0.01f);
+		//wave.rot(0.01f);
+		//wave2.rot(0.01f);
 
 		counter++;
 		//  ledArray.rot(2);

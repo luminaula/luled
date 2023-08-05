@@ -50,26 +50,28 @@ void Wave::draw(FrameBuffer& fb) const
 {
 	for(float i = 0; i < length; i++)
 	{
-		const float tmpAmplitude = amplitude + amplitude * i * distanceAmplitudeFactor;
-		const float tmpFrequency = frequency * i + frequency * i * distanceFrequencyFactor;
-		std::pair<float, float> normal = {std::cos(angle + M_PI / 2), std::sin(angle + M_PI / 2)};
-		float x = x1 + i * std::cos(angle) + std::sin(phase + tmpFrequency / amplitude) * normal.first * tmpAmplitude;
-		float y = y1 + i * std::sin(angle) + std::sin(phase + tmpFrequency / amplitude) * normal.second * tmpAmplitude;
+		const auto [x, y] = sample(i);
 		fb.drawPixel(x, y, color);
 	}
 }
-/* void Wave::draw(FrameBuffer& fb) const
+
+std::pair<float, float> Wave::sample(const float pos) const
 {
-    for(float i = 0; i < length; i++)
-    {
-        const float tmpAmplitude = amplitude + amplitude * (1.0f - distanceAmplitudeFactor) * i;
-		const float tmpFrequency = frequency * i;
-        std::pair<float, float> normal = {std::cos(angle + M_PI / 2), std::sin(angle + M_PI / 2)};
-        float x = x1 + i * std::cos(angle) + std::sin(phase + tmpFrequency * i / amplitude) * normal.first * tmpAmplitude;
-        float y = y1 + i * std::sin(angle) + std::sin(phase + tmpFrequency * i / amplitude) * normal.second * tmpAmplitude;
-        fb.drawPixel(x, y, color);
-    }
-} */
+	const float tmpAmplitude = amplitude + amplitude * pos * distanceAmplitudeFactor;
+	const float tmpFrequency = frequency * pos + frequency * pos * distanceFrequencyFactor;
+	std::pair<float, float> normal = {std::cos(angle + M_PI / 2), std::sin(angle + M_PI / 2)};
+	float x = x1 + pos * std::cos(angle) + std::sin(phase + tmpFrequency / amplitude) * normal.first * tmpAmplitude;
+	float y = y1 + pos * std::sin(angle) + std::sin(phase + tmpFrequency / amplitude) * normal.second * tmpAmplitude;
+	return {x, y};
+}
+
+std::tuple<float, float, float> Wave::sampleAndAngle(const float pos) const
+{
+	const auto [x1, y1] = sample(pos);
+	const auto [x2, y2] = sample(pos + 0.1f);
+	const float angle = std::atan2(y2 - y1, x2 - x1);
+	return {x1, y1, angle + M_PI / 2};
+}
 
 
 } // namespace luled
