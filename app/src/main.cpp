@@ -34,10 +34,11 @@ int main(int, char**)
 	LedEffect glowEffectWhite(glow, 255, 255, 255, 20);
 	LedEffect glowEffectRed(glow, 255, 0, 0, 40);
 	Line line(display.width() / 2, display.height() / 2, display.width() / 2 + 100, display.height() / 2 + 100, 0xFF00FFFF);
-	Line2 line2(display.width() / 2, display.height() / 2, 100.0f, 0, 0xFF00FFFF);
-	Line2 line3(display.width() / 2, display.height() / 2, 100.0f, -M_PI, 0xFF00FFFF);
+	Line2 line2(display.width() / 2, display.height() / 2, 2560, 0, 0xFF0000FF);
+	Line2 line3(display.width() / 2, display.height() / 2, 2560, -M_PI, 0xFF0000FF);
 
-	Wave wave(500, 500, 2560, 0, 0, 0xFFFF0000);
+	Wave wave(display.width() / 2, display.height() / 2, 2560, 0, 0, 0xFFFF0000);
+	Wave wave2(display.width() / 2, display.height() / 2, 2560, M_PI, 0, 0xFF00FF00);
 
 	color::Vec3F v1(1, 0, 0);
 
@@ -70,10 +71,13 @@ int main(int, char**)
 		display.drawShape(line2);
 		display.drawShape(line3);
 		display.drawShape(wave);
+		display.drawShape(wave2);
 		line2.rot(0.01f);
 		line3.rot(0.01f);
 		wave.shift(0.1f);
+		wave2.shift(-0.1f);
 		wave.rot(0.01f);
+		wave2.rot(0.01f);
 		
 		counter++;
 		//  ledArray.rot(2);

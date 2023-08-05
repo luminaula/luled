@@ -28,11 +28,11 @@ void Wave::rot(float angle)
 
 void Wave::draw(FrameBuffer& fb) const
 {
-	for(auto i = 0; i < length; i++)
+	for(float i = 0; i < length; i++)
 	{
 		std::pair<float, float> normal = {std::cos(angle + M_PI / 2), std::sin(angle + M_PI / 2)};
-		float x = x1 + i * std::cos(angle) + std::cos(phase + i) * 100 * normal.first;
-		float y = y1 + i * std::sin(angle) + std::sin(phase + i) * 100 * normal.second;
+		float x = x1 + i * std::cos(angle) + std::sin(phase + i / 10) * normal.first * 10;
+		float y = y1 + i * std::sin(angle) + std::sin(phase + i / 10) * normal.second * 10;
 		fb.drawPixel(x, y, color);
 	}
 }
