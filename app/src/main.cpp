@@ -30,15 +30,15 @@ int main(int, char**)
 			led.b = intensity * b;
 		}
 	};
-	
+
 	LedEffect glowEffectWhite(glow, 255, 255, 255, 20);
 	LedEffect glowEffectRed(glow, 255, 0, 0, 40);
 	Line line(display.width() / 2, display.height() / 2, display.width() / 2 + 100, display.height() / 2 + 100, 0xFF00FFFF);
 	Line2 line2(display.width() / 2, display.height() / 2, 2560, 0, 0xFF0000FF);
 	Line2 line3(display.width() / 2, display.height() / 2, 2560, -M_PI, 0xFF0000FF);
 
-	Wave wave(display.width() / 2, display.height() / 2, 2560, 0, 0, 0xFFFF0000);
-	Wave wave2(display.width() / 2, display.height() / 2, 2560, M_PI, 0, 0xFF00FF00);
+	Wave wave(display.width() / 2, display.height() / 2, 10, 2560, 0, 0, 0xFFFF0000);
+	Wave wave2(display.width() / 2, display.height() / 2, 15, 2560, M_PI, 0, 0xFF00FF00);
 
 	color::Vec3F v1(1, 0, 0);
 
@@ -53,14 +53,14 @@ int main(int, char**)
 		}
 
 		++glowEffectWhite(ledArray);
-		
+
 
 		for(auto j = 0; j < 5; j++)
 		{
 			for(auto i = 0; i < ledArray.size(); i++)
 			{
 				auto& led = ledArray[i];
-				
+
 				Square sq(i*10, j * 20 + 500, led.r << 16 | led.g << 8 | led.b, 10);
 
 				display.drawShape(sq);
@@ -78,7 +78,7 @@ int main(int, char**)
 		wave2.shift(-0.1f);
 		wave.rot(0.01f);
 		wave2.rot(0.01f);
-		
+
 		counter++;
 		//  ledArray.rot(2);
 

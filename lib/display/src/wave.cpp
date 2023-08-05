@@ -5,8 +5,8 @@
 namespace luled
 {
 
-Wave::Wave(float x1, float y1, float length, float angle, float phase, uint32_t color) :
-	x1(x1), y1(y1), length(length), angle(angle), phase(phase), color(color)
+Wave::Wave(float x1, float y1, float amplitude, float length, float angle, float phase, uint32_t color) :
+	x1(x1), y1(y1), amplitude(amplitude), length(length), angle(angle), phase(phase), color(color)
 {}
 
 
@@ -31,8 +31,8 @@ void Wave::draw(FrameBuffer& fb) const
 	for(float i = 0; i < length; i++)
 	{
 		std::pair<float, float> normal = {std::cos(angle + M_PI / 2), std::sin(angle + M_PI / 2)};
-		float x = x1 + i * std::cos(angle) + std::sin(phase + i / 10) * normal.first * 10;
-		float y = y1 + i * std::sin(angle) + std::sin(phase + i / 10) * normal.second * 10;
+		float x = x1 + i * std::cos(angle) + std::sin(phase + i / amplitude) * normal.first * amplitude;
+		float y = y1 + i * std::sin(angle) + std::sin(phase + i / amplitude) * normal.second * amplitude;
 		fb.drawPixel(x, y, color);
 	}
 }
