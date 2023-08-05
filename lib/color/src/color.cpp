@@ -45,4 +45,96 @@ YcbcrToRgbConversionInfo::YcbcrToRgbConversionInfo(int bits, bool fullRange) :
 		rgbToYcbcrMat = ycbrToRgbMat.inverse();
 }
 
+Vec3F rgbToHsl(const Vec3F& rgb)
+{
+	Vec3F hsl;
+    float valueMax, valueMin;
+    float r = rgb[0] / 255.0f;
+    float g = rgb[1] / 255.0f;
+    float b = rgb[2] / 255.0f;
+    valueMax = std::max(std::max(r, g), b);
+    valueMin = std::min(std::min(r, g), b);
+
+    hsl[2] = (valueMax + valueMin) / 2.0;
+    if (valueMax == valueMin) 
+	{
+        hsl[0] = 0.0f;
+        hsl[1] = 0.0f;
+    }
+	else
+	{
+        float range = valueMax - valueMin;
+        if (hsl[2] > 0.5)
+		{
+            hsl[1] = range / (2 - valueMax - valueMin);
+        }
+		else 
+		{
+            hsl[1] = range / (valueMax + valueMin);
+        }
+        if (r > g && r > b)
+		{
+            hsl[0] = (g - b) / range + (g < b ? 6.0f : 0.0f);
+		}
+        else if (g > b)
+		{
+            hsl[0] = (b - r) / range + 2.0f;
+		}
+        else
+		{
+            hsl[0] = (r - g) / range + 4.0f;
+		}
+        hsl[0] /= 6;
+    }
+}
+
+Vec3F hslToRgb(const Vec3F& hsl)
+{
+	Vec3F rgb;
+	if (hsl[1] <= 0.0001f)
+	{
+        rgb[0] = hsl[2] * 255.0;
+        rgb[1] = hsl[2] * 255.0;
+        rgb[2] = hsl[2] * 255.0;
+    }
+	else
+	{
+        float chroma = (1 - std::abs(2 * hsl[2] - 1)) * hsl[1];
+        float hue = hsl[0] * 6.0f;
+        float x = chroma * (1 - std::abs(std::fmod(hue, 2.0f) - 1));
+        float magnitude = hsl[2] - chroma / 2;
+
+        auto hueToRgb = [](float chroma, float x, float hue) -> auto 
+		{
+            if (hue <= 0.001f)
+			{
+                return std::make_tuple(0.0f, 0.0f, 0.0f);
+			}
+            int hue_floor = static_cast<int>(std::floor(hue));
+            switch (hue_floor)
+			{
+				case 0:
+					return std::make_tuple(chroma, x, 0.0f);
+				case 1:
+					return std::make_tuple(x, chroma, 0.0f);
+				case 2:
+					return std::make_tuple(0.0f, chroma, x);
+				case 3:
+					return std::make_tuple(0.0f, x, chroma);
+				case 4:
+					return std::make_tuple(x, 0.0f, chroma);
+				case 5:
+					return std::make_tuple(chroma, 0.0f, x);
+				default:
+					return std::make_tuple(0.0f, 0.0f, 0.0f);
+            }
+        };
+        std::tie(rgb[0], rgb[1], rgb[2]) = hueToRgb(chroma, x, hue);
+        rgb[0] = (rgb[0] + magnitude) * 255.0f;
+        rgb[1] = (rgb[1] + magnitude) * 255.0f;
+        rgb[2] = (rgb[2] + magnitude) * 255.0f;
+    }
+	return rgb;
+}
+
 } // namespace luled::color

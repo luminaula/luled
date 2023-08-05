@@ -28,5 +28,8 @@ struct YcbcrToRgbConversionInfo
 	
 };
 
+Vec3F rgbToHsl(const Vec3F& rgb);
+Vec3F hslToRgb(const Vec3F& hsl);
+
 
 } // namespace luled::color
