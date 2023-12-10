@@ -24,6 +24,8 @@ public:
 	void pollEvents();
 	bool isClosed();
 
+	FrameBuffer& frameBuffer() { return fb; }
+
 	void drawSquare(const int x,
 					const int y,
 					const int size,

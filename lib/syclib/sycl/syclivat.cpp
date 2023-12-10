@@ -3,6 +3,14 @@
 
 #include <sycl/sycl.hpp>
 
+
+struct Syccliva::Data
+{
+	sycl::device device;
+	sycl::queue queue;
+	int* buffer;
+};
+
 void sgemmSycl(float* A, float* B, float* C, int N, int M, int K)
 {
 
@@ -61,4 +69,62 @@ void sycli()
 	float C[2 * 4] = { 0 };
 
 	sgemmSycl(A, B, C, 2, 4, 3);
+}
+
+void mandelbro(uint32_t* fb, int width, int height, float zoom, std::pair<float, float> center)
+{
+	auto device = sycl::gpu_selector{}.select_device();
+
+	const std::pair<float, float> pixelWidth = { 1.0f / width / zoom, 1.0f / height / zoom };
+
+	const std::pair<float, float> topLeft = { center.first - pixelWidth.first * width / 2, center.second - pixelWidth.second * height / 2 };
+	// create queue
+	sycl::queue queue(device);
+
+	// allocate device memory
+	uint32_t* fb_ = sycl::malloc_device<uint32_t>(width * height, queue);
+
+	// copy to device
+	// queue.memcpy(fb_, fb, w * h * sizeof(uint32_t));
+
+	// workgroup size
+	sycl::range glob{ static_cast<unsigned long>(width), static_cast<unsigned long>(height) };
+	sycl::range local{ 32, 32 };
+
+	queue.wait();
+
+	// submit kernel
+	queue.submit([&](sycl::handler& h)
+	{
+		h.parallel_for(sycl::nd_range{glob, local}, [=](sycl::nd_item<2> it)
+		{
+			int x = it.get_global_id(0);
+			int y = it.get_global_id(1);
+
+			float x0 = (float)x * pixelWidth.first + topLeft.first;
+			float y0 = (float)y * pixelWidth.second + topLeft.second;
+
+
+			float x_ = 0.0f;
+			float y_ = 0.0f;
+
+			int i = 0;
+			while(x_ * x_ + y_ * y_ < 2 * 2 && i < 1000)
+			{
+				float xtemp = x_ * x_ - y_ * y_ + x0;
+				y_ = 2 * x_ * y_ + y0;
+				x_ = xtemp;
+				i++;
+			}
+
+			fb_[y * width + x] = i;
+		});
+	});
+	queue.wait();
+
+	// copy back to host
+	queue.memcpy(fb, fb_, width * height * sizeof(uint32_t));
+	queue.wait();
+
+	sycl::free(fb_, queue);
 }
