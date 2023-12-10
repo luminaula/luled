@@ -86,6 +86,8 @@ Vec3F rgbToHsl(const Vec3F& rgb)
 		}
         hsl[0] /= 6;
     }
+
+	return hsl;
 }
 
 Vec3F hslToRgb(const Vec3F& hsl)

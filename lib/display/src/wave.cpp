@@ -50,7 +50,7 @@ void Wave::draw(FrameBuffer& fb) const
 {
 	const float epsilon = 0.1;
 	float iPlus = 0.1f;
-	float x1, y1;
+	float x1 = 0.0f, y1 = 0.0f;
 	for(float i = 0; i < length; i += iPlus)
 	{
 		const auto [x, y] = sample(i);
