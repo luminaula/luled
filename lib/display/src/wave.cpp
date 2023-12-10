@@ -48,10 +48,27 @@ void Wave::rot(float angle)
 
 void Wave::draw(FrameBuffer& fb) const
 {
-	for(float i = 0; i < length; i++)
+	const float epsilon = 0.1;
+	float iPlus = 0.1f;
+	float x1, y1;
+	for(float i = 0; i < length; i += iPlus)
 	{
 		const auto [x, y] = sample(i);
 		fb.drawPixel(x, y, color);
+		if (i != 0)
+		{
+			if (std::abs(x - x1) < epsilon
+				|| std::abs(y - y1) < epsilon)
+			{
+				iPlus += 0.1f;
+			}
+			else
+			{
+				iPlus -= 0.1f;
+			}
+		}
+		x1 = x;
+		y1 = y;
 	}
 }
 
