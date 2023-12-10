@@ -30,7 +30,7 @@ void sgemmSycl(float* A, float* B, float* C, int N, int M, int K)
 
 	// workgroup size
 	sycl::range glob{ static_cast<unsigned long>(N), static_cast<unsigned long>(M) };
-	sycl::range local{ 1, 1 };
+	sycl::range local{ 32, 32 };
 
 	queue.wait();
 
@@ -124,7 +124,6 @@ void mandelbro(uint32_t* fb, int width, int height, float zoom, std::pair<float,
 
 	// copy back to host
 	queue.memcpy(fb, fb_, width * height * sizeof(uint32_t));
-	queue.wait();
 
 	sycl::free(fb_, queue);
 }

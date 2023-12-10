@@ -1,6 +1,8 @@
 #include <stdlib.h> // EXIT_SUCCESS
 
 #include <iostream>
+#include <thread>
+#include <tuple>
 
 #include "display.h"
 #include "square.h"
@@ -16,28 +18,39 @@
 
 using namespace luled;
 
+int counter = 0;
+int counter2 = 0;
+
+
+void worker(std::stop_token st, std::reference_wrapper<FrameBuffer> fb, float zoom, std::pair<float, float> center)
+{
+	while(!st.stop_requested())
+	{
+		mandelBrotSycl(fb.get().data, fb.get().width, fb.get().height, zoom, center);
+		zoom = zoom * 1.001f + 0.001f;
+		counter++;
+
+	}
+}
+
 int main(int, char**)
 {
 	Display display(2560, 1440);
-	size_t counter = 0;
 
 	float zoom = 0.25f;
 	std::pair<float, float> center = {-0.1528f, 1.0397};
 
-	while(true)
+	std::jthread workerThread(worker, std::reference_wrapper<FrameBuffer>(display.frameBuffer()), zoom, center);
+
+	while(!display.isClosed())
 	{
-		counter++;
+		counter2++;
 
 		display.pollEvents();
-		auto& fb = display.frameBuffer();
 
-		mandelBrotSycl(fb.data, fb.width, fb.height, zoom, center);
-		
+		display.update();
 
-		zoom = zoom * 1.01f + 0.001f;
-		std::cout << counter << std::endl;
-
-		display.update(fb);
+		std::cout << counter - counter2 << std::endl;
 	}
 
 	return EXIT_SUCCESS;
