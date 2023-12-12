@@ -24,9 +24,10 @@ int counter2 = 0;
 
 void worker(std::stop_token st, std::reference_wrapper<FrameBuffer> fb, float zoom, std::pair<float, float> center)
 {
+	Syccliva syccl;
 	while(!st.stop_requested())
 	{
-		mandelBrotSycl(fb.get().data, fb.get().width, fb.get().height, zoom, center);
+		mandelBrotSycl(syccl, fb.get().data, fb.get().width, fb.get().height, zoom, center);
 		zoom = zoom * 1.001f + 0.001f;
 		counter++;
 

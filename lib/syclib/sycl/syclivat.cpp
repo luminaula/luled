@@ -4,12 +4,27 @@
 #include <sycl/sycl.hpp>
 
 
-struct Syccliva::Data
+struct SycclivaImpl
 {
 	sycl::device device;
 	sycl::queue queue;
-	int* buffer;
+	uint32_t* buffer;
+	int width;
+	int height;
 };
+
+
+
+void* initSyccs()
+{
+	SycclivaImpl* syccliva = new SycclivaImpl();
+
+	syccliva->device = sycl::gpu_selector{}.select_device();
+	syccliva->queue = sycl::queue(syccliva->device);
+	return (void*)syccliva;
+}
+
+
 
 void sgemmSycl(float* A, float* B, float* C, int N, int M, int K)
 {
@@ -71,18 +86,28 @@ void sycli()
 	sgemmSycl(A, B, C, 2, 4, 3);
 }
 
-void mandelbro(uint32_t* fb, int width, int height, float zoom, std::pair<float, float> center)
+void mandelbro(void* syccliva, uint32_t* fb, int width, int height, float zoom, std::pair<float, float> center)
 {
-	auto device = sycl::gpu_selector{}.select_device();
+
+	auto* data = static_cast<SycclivaImpl*>(syccliva);
 
 	const std::pair<float, float> pixelWidth = { 1.0f / width / zoom, 1.0f / height / zoom };
 
 	const std::pair<float, float> topLeft = { center.first - pixelWidth.first * width / 2, center.second - pixelWidth.second * height / 2 };
 	// create queue
-	sycl::queue queue(device);
+	sycl::queue& queue = data->queue;
 
 	// allocate device memory
-	uint32_t* fb_ = sycl::malloc_device<uint32_t>(width * height, queue);
+	if(width * height != data->width * data->height)
+	{
+		if(data->buffer != nullptr)
+			sycl::free(data->buffer, queue);
+		data->buffer = sycl::malloc_device<uint32_t>(width * height, queue);
+		data->width = width;
+		data->height = height;
+		queue.wait();
+	}
+	uint32_t* fb_ = data->buffer;
 
 	// copy to device
 	// queue.memcpy(fb_, fb, w * h * sizeof(uint32_t));
@@ -91,7 +116,6 @@ void mandelbro(uint32_t* fb, int width, int height, float zoom, std::pair<float,
 	sycl::range glob{ static_cast<unsigned long>(width), static_cast<unsigned long>(height) };
 	sycl::range local{ 32, 32 };
 
-	queue.wait();
 
 	// submit kernel
 	queue.submit([&](sycl::handler& h)
@@ -120,10 +144,8 @@ void mandelbro(uint32_t* fb, int width, int height, float zoom, std::pair<float,
 			fb_[y * width + x] = i;
 		});
 	});
-	queue.wait();
 
 	// copy back to host
 	queue.memcpy(fb, fb_, width * height * sizeof(uint32_t));
 
-	sycl::free(fb_, queue);
 }
