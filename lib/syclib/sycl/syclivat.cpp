@@ -19,17 +19,18 @@ void* initSyccs()
 {
 	SycclivaImpl* syccliva = new SycclivaImpl();
 
-	syccliva->device = sycl::gpu_selector{}.select_device();
+	syccliva->device = sycl::device(sycl::gpu_selector_v);//sycl::gpu_selector{}.select_device();
 	syccliva->queue = sycl::queue(syccliva->device);
 	return (void*)syccliva;
 }
 
 
 
+
 void sgemmSycl(float* A, float* B, float* C, int N, int M, int K)
 {
 
-	auto device = sycl::gpu_selector{}.select_device();
+	auto device = sycl::device(sycl::gpu_selector_v);
 
 	// create queue
 	sycl::queue queue(device);
