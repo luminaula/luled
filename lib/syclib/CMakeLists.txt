@@ -6,6 +6,12 @@ if(CMAKE_CXX_COMPILER_ID STREQUAL "IntelLLVM")
 	set(WITH_SYCL ON)
 endif()
 
+include(userOffloadArch.txt OPTIONAL)
+if(NOT DEFINED OFFLOAD_ARCH)
+	set(OFFLOAD_ARCH --offload-arch=sm_75)
+endif()
+
+
 
 file(GLOB sources src/*.cpp)
 
@@ -19,10 +25,10 @@ if(WITH_SYCL)
 	find_package(IntelSYCL REQUIRED)
 	
 	set_property(TARGET IntelSYCL::SYCL_CXX PROPERTY
-	INTERFACE_COMPILE_OPTIONS -fsycl -fsycl-targets=nvptx64-nvidia-cuda -Xsycl-target-backend=nvptx64-nvidia-cuda --offload-arch=sm_75)
-	
+	INTERFACE_COMPILE_OPTIONS -fsycl -fsycl-targets=nvptx64-nvidia-cuda -Xsycl-target-backend=nvptx64-nvidia-cuda ${OFFLOAD_ARCH})
+
 	set_property(TARGET IntelSYCL::SYCL_CXX PROPERTY
-	INTERFACE_LINK_OPTIONS -fsycl -fsycl-targets=nvptx64-nvidia-cuda -Xsycl-target-backend=nvptx64-nvidia-cuda --offload-arch=sm_75)
+	INTERFACE_LINK_OPTIONS -fsycl -fsycl-targets=nvptx64-nvidia-cuda -Xsycl-target-backend=nvptx64-nvidia-cuda ${OFFLOAD_ARCH})
 endif()
 
 add_library(${PROJECT_NAME} SHARED ${sources} ${ispc_sources} ${cuda_sources})
