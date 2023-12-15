@@ -8,6 +8,8 @@ namespace luled
 Display::Display(int width, int height) : fb(width, height)
 {
 	init(width, height);
+
+	input = std::make_unique<Input>();
 }
 
 Display::~Display()
@@ -65,6 +67,10 @@ void Display::pollEvents()
 			SDL_DestroyWindow(window);
 			SDL_Quit();
 			window = nullptr;
+		}
+		else
+		{
+			input->queueEvent(e);
 		}
 	}
 }

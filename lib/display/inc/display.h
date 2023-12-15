@@ -5,10 +5,10 @@
 
 #include "framebuffer.h"
 #include "shape.h"
+#include "input.h"
 
 namespace luled
 {
-
 
 class Display
 {
@@ -55,6 +55,8 @@ public:
 
 	int width() const { return fb.width; }
 	int height() const { return fb.height; }
+
+	std::unique_ptr<Input> input;
 
 private:
 	SDL_Texture* texture;
