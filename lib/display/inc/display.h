@@ -23,6 +23,7 @@ public:
 	void clear(uint32_t color);
 	void pollEvents();
 	bool isClosed();
+	bool pollEvents_isClosed();
 
 	FrameBuffer& frameBuffer() { return fb; }
 

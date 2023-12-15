@@ -75,6 +75,12 @@ void Display::pollEvents()
 	}
 }
 
+bool Display::pollEvents_isClosed()
+{
+	pollEvents();
+	return isClosed();
+}
+
 void Display::drawSquare(const int x,
 						 const int y,
 						 const int size,
