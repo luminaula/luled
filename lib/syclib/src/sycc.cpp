@@ -14,7 +14,7 @@ void sycc()
 	sycli();
 }
 
-void mandelBrotSycl(Syccliva& syccliva, uint32_t* fb, int w, int h, float zoom, std::pair<float, float> center)
+void mandelBrotSycl(Syccliva& syccliva, uint32_t* fb, int w, int h, MandelReal zoom, std::pair<MandelReal, MandelReal> center)
 {
 	mandelbro(syccliva.data(), fb, w, h, zoom, center);
 }

@@ -87,56 +87,91 @@ void sycli()
 	sgemmSycl(A, B, C, 2, 4, 3);
 }
 
-void mandelbro(void* syccliva, uint32_t* fb, int width, int height, float zoom, std::pair<float, float> center)
+void mandelbro(void* syccliva_void, uint32_t* fb, const int width, const int height, const MandelReal zoom, const std::pair<MandelReal, MandelReal> center)
 {
+	auto* syccliva = static_cast<SycclivaImpl*>(syccliva_void);
 
-	auto* data = static_cast<SycclivaImpl*>(syccliva);
+	//const std::pair<MandelReal, MandelReal> pixelWidth_ = { 1.0f / width / zoom, 1.0f / height / zoom };
+	const MandelReal pixelWidth = 1.0f / width / zoom;
+	const MandelReal pixelHeight = 1.0f / height / zoom;
 
-	const std::pair<float, float> pixelWidth = { 1.0f / width / zoom, 1.0f / height / zoom };
-
-	const std::pair<float, float> topLeft = { center.first - pixelWidth.first * width / 2, center.second - pixelWidth.second * height / 2 };
-	// create queue
-	sycl::queue& queue = data->queue;
+	//const std::pair<MandelReal, MandelReal> topLeft = { center.first - pixelWidth * width / 2, center.second - pixelHeight * height / 2 };
+	const MandelReal x00 = center.first - pixelWidth * width / 2;
+	const MandelReal y00 = center.second - pixelHeight * height / 2;
 
 	// allocate device memory
-	if(width * height != data->width * data->height)
+	if(width * height != syccliva->width * syccliva->height)
 	{
-		if(data->buffer != nullptr)
-			sycl::free(data->buffer, queue);
-		data->buffer = sycl::malloc_device<uint32_t>(width * height, queue);
-		data->width = width;
-		data->height = height;
-		queue.wait();
+		if(syccliva->buffer != nullptr)
+			sycl::free(syccliva->buffer, syccliva->queue);
+		syccliva->buffer = sycl::malloc_device<uint32_t>(width * height, syccliva->queue);
+		syccliva->width = width;
+		syccliva->height = height;
+		syccliva->queue.wait();
 	}
-	uint32_t* fb_ = data->buffer;
-
-	// copy to device
-	// queue.memcpy(fb_, fb, w * h * sizeof(uint32_t));
+	uint32_t* fb_ = syccliva->buffer;
 
 	// workgroup size
 	sycl::range glob{ static_cast<unsigned long>(width), static_cast<unsigned long>(height) };
-	sycl::range local{ 32, 32 };
+	sycl::range local{ 16, 4 };
 
-
+	/*[local] = float 	= double
+		2 ,8  = 142
+		2 ,16 = 184
+		2 ,32 = 187
+		4 ,8  = 192
+		4 ,16 = 194
+		4 ,32 = 189
+		8 ,4  = 194
+		8 ,8  = 196
+		8 ,16 = 186
+		8 ,32 = 188
+		16,1  = 144
+		16,2  = 195
+		16,4  = 198		= 18
+		16,8  = 197
+		16,16 = 194
+		16,32 = 180
+		32,1  = 193
+		32,2  = 196
+		32,4  = 195
+		32,8  = 193
+		32,16 = 189
+		32,32 = 181
+		64,1  = 193
+		64,2  = 195
+		64,4  = 196
+		64,8  = 196
+		64,16 = 188
+		128,1 = 190
+		128,2 = 190
+		128,4 = 195
+		128,8 = 190
+		256,1 = 190
+		256,2 = 193
+		256,4 = 190
+		512,1 = 189
+		512,2 = 190
+	*/
+	
 	// submit kernel
-	queue.submit([&](sycl::handler& h)
+	syccliva->queue.submit([&](sycl::handler& h)
 	{
 		h.parallel_for(sycl::nd_range{glob, local}, [=](sycl::nd_item<2> it)
 		{
-			int x = it.get_global_id(0);
-			int y = it.get_global_id(1);
+			const size_t x = it.get_global_id(0);
+			const size_t y = it.get_global_id(1);
 
-			float x0 = (float)x * pixelWidth.first + topLeft.first;
-			float y0 = (float)y * pixelWidth.second + topLeft.second;
+			const MandelReal x0 = (MandelReal)x * pixelWidth + x00;
+			const MandelReal y0 = (MandelReal)y * pixelHeight + y00;
 
+			MandelReal x_ = 0.0f;
+			MandelReal y_ = 0.0f;
 
-			float x_ = 0.0f;
-			float y_ = 0.0f;
-
-			int i = 0;
+			uint32_t i = 0;
 			while(x_ * x_ + y_ * y_ < 2 * 2 && i < 1000)
 			{
-				float xtemp = x_ * x_ - y_ * y_ + x0;
+				MandelReal xtemp = x_ * x_ - y_ * y_ + x0;
 				y_ = 2 * x_ * y_ + y0;
 				x_ = xtemp;
 				i++;
@@ -146,7 +181,8 @@ void mandelbro(void* syccliva, uint32_t* fb, int width, int height, float zoom, 
 		});
 	});
 
+	// wait for previous memcpy to finish
+	syccliva->queue.wait();
 	// copy back to host
-	queue.memcpy(fb, fb_, width * height * sizeof(uint32_t));
-
+	syccliva->queue.memcpy(fb, fb_, width * height * sizeof(uint32_t));
 }
