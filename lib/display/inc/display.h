@@ -7,6 +7,9 @@
 #include "shape.h"
 #include "input.h"
 
+#include <glad/gl.h>
+#include <SDL2/SDL_opengl.h>
+
 namespace luled
 {
 
@@ -59,11 +62,15 @@ public:
 
 	std::unique_ptr<Input> input;
 
+	void hommeli();
+
 private:
 	SDL_Texture* texture;
 	SDL_Window* window;
 	SDL_Renderer* renderer;
 	FrameBuffer fb;
+
+	SDL_GLContext context = nullptr;
 };
 
 

@@ -124,6 +124,13 @@ int main(int, char**)
 			//std::cout << "Zoom: " << zoom << std::endl;
 			//std::cout << "Center: " << center.first << ", " << center.second << std::endl;
 		}
+
+		static uint8_t asd = 0;
+		if (++asd > 10)
+		{
+			asd = 0;
+			display.hommeli();
+		}
 	}
 
 	return EXIT_SUCCESS;

@@ -8,7 +8,7 @@ endif()
 
 include(userOffloadArch.txt OPTIONAL)
 if(NOT DEFINED OFFLOAD_ARCH)
-	set(OFFLOAD_ARCH --offload-arch=sm_75)
+	set(OFFLOAD_ARCH --offload-arch=sm_75) # Lumin GTX 2080
 endif()
 
 

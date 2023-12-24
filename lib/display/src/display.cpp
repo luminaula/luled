@@ -20,9 +20,38 @@ void Display::init(int width, int height)
 {
 	SDL_Init(SDL_INIT_EVERYTHING);
 
+	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 5);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
+
 	window = SDL_CreateWindow("LULED", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, SDL_WINDOW_OPENGL);
 	renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 	texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STREAMING, width, height);
+
+	context = SDL_GL_CreateContext(window);
+	int version = gladLoadGL((GLADloadfunc) SDL_GL_GetProcAddress);
+	printf("GL %d.%d\n", GLAD_VERSION_MAJOR(version), GLAD_VERSION_MINOR(version));
+
+	glClearColor(0.7f, 0.9f, 0.1f, 1.0f);
+	glClear(GL_COLOR_BUFFER_BIT);
+
+	SDL_GL_SwapWindow(window);
+	SDL_Delay(100);
+
+	glClearColor(0.7f, 0.9f, 1.0f, 0.5f);
+	glClear(GL_COLOR_BUFFER_BIT);
+
+	SDL_GL_SwapWindow(window);
+	SDL_Delay(100);
+}
+
+void Display::hommeli()
+{
+	glClearColor(0.5f, 0.5f, 0.5f, 0.0f);
+	glClear(GL_COLOR_BUFFER_BIT);
+	SDL_GL_SwapWindow(window);
+	SDL_Delay(100);
 }
 
 void Display::update()

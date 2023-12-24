@@ -9,4 +9,4 @@ add_executable(${PROJECT_NAME} ${SOURCES})
 
 target_include_directories(${PROJECT_NAME} PUBLIC inc)
 
-target_link_libraries(${PROJECT_NAME} display ledarray color syclib Threads::Threads)
+target_link_libraries(${PROJECT_NAME} display ledarray color syclib Threads::Threads glad)

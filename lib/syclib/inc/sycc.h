@@ -4,7 +4,7 @@
 
 #include <tuple>
 
-using MandelReal = double;
+using MandelReal = float;
 
 #include "syclivat.h"
 
