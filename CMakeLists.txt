@@ -8,6 +8,7 @@ enable_testing()
 set(CMAKE_CXX_STANDARD 20)
 
 find_package(nv-codec-headers)
+find_package(volk)
 find_package(SDL2)
 find_package(glfw3)
 find_package(vk-bootstrap)
@@ -15,7 +16,6 @@ find_package(vulkan-memory-allocator)
 find_package(ffmpeg)
 find_package(OpenSSL)
 find_package(glad)
-
 
 if(APPLE)
     include_directories(/Library/Framework/SDL2.framework)
