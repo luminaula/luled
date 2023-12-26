@@ -16,6 +16,7 @@ find_package(vulkan-memory-allocator)
 find_package(ffmpeg)
 find_package(OpenSSL)
 find_package(glad)
+find_package(Threads)
 
 if(APPLE)
     include_directories(/Library/Framework/SDL2.framework)

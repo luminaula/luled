@@ -1,5 +1,7 @@
 #include "lelu_loader.h"
 
+#include <iostream>
+
 #include "vulkan/vulkan.h"
 #include "vulkan/vulkan.hpp"
 
@@ -23,6 +25,14 @@ struct LeLuLoader::Impl
 		instance = vk::createInstance({});
 
 		std::vector<vk::PhysicalDevice> physicalDevices = instance.enumeratePhysicalDevices();
+
+		// Print device names
+		for (const auto& physicalDevice : physicalDevices)
+		{
+			vk::PhysicalDeviceProperties properties = physicalDevice.getProperties();
+			std::cout << properties.deviceName << std::endl;
+		}
+
 		physicalDevice = physicalDevices[0]; // Select the first physical device for simplicity
 
 		device = physicalDevice.createDevice({});
@@ -39,12 +49,6 @@ struct LeLuLoader::Impl
 		commandBufferAllocateInfo.commandBufferCount = 1;
 		commandBuffer = device.allocateCommandBuffers(commandBufferAllocateInfo)[0];
 
-		fence = device.createFence({});
-
-		semaphore = device.createSemaphore({});
-
-		vk::ImageCreateInfo imageCreateInfo;
-		image = device.createImage(imageCreateInfo);
 	}
 
 	int a;
