@@ -6,7 +6,9 @@
 
 using MandelReal = float;
 
+#ifdef WITH_SYCL
 #include "syclivat.h"
+#endif
 
 class Syccliva
 {

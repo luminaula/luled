@@ -13,6 +13,8 @@
 #include "color.h"
 #include "color_vec.h"
 #include "color_transfer.h"
+#include "lelu_decode.h"
+#include "lelu_loader.h"
 
 #include "sycc.h"
 
@@ -59,6 +61,9 @@ void worker(
 
 int main(int, char**)
 {
+	foo_decode();
+
+	LeLuLoader leluLoader;
 	Display display(2560, 1440);
 
 	MandelReal zoom = 46.450;//0.25f;
@@ -68,7 +73,7 @@ int main(int, char**)
 
 	MandelReal multiplier = 1.0f;
 
-	display.input->addKeyCb_multiply(SDLK_q, std::ref(zoomPerFrame), 1.001);
+	display.input->addKeyCb_multiply(SDLK_q, std::ref(zoomPerFrame), 1.01);
 	display.input->addKeyCb_multiply(SDLK_a, std::ref(zoomPerFrame), 0.999);
 	display.input->addKeyCb_add(SDLK_UP, std::ref(yPerFrame), -0.001);
 	display.input->addKeyCb_add(SDLK_DOWN, std::ref(yPerFrame), 0.001);

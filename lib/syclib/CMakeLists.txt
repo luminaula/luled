@@ -4,6 +4,7 @@ project(syclib)
 
 if(CMAKE_CXX_COMPILER_ID STREQUAL "IntelLLVM")
 	set(WITH_SYCL ON)
+	add_compile_definitions(WITH_SYCL)
 endif()
 
 include(userOffloadArch.txt OPTIONAL)
