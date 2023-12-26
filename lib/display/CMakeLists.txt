@@ -1,11 +1,11 @@
 project(display)
 
-find_package(SDL2 REQUIRED)
+
+find_package(glad REQUIRED)
 
 file(GLOB_RECURSE SOURCES *.cpp)
 
-add_library(${PROJECT_NAME} STATIC ${SOURCES})
+add_library(${PROJECT_NAME} SHARED ${SOURCES})
 
-target_include_directories(${PROJECT_NAME} PUBLIC inc)
-
-target_link_libraries(${PROJECT_NAME} PUBLIC SDL2::SDL2 glad)
+target_link_libraries(${PROJECT_NAME} PUBLIC SDL2::SDL2main glad::glad)
+target_include_directories(${PROJECT_NAME} PUBLIC inc ${glad_INCLUDE_DIRS})

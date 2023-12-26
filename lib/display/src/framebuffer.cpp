@@ -1,5 +1,7 @@
 #include "framebuffer.h"
 
+#include "glad/glad.h"
+
 namespace luled
 {
 

@@ -1,5 +1,8 @@
 #include "display.h"
 
+#include "glad/glad.h"
+
+
 namespace luled
 {
 
@@ -29,9 +32,11 @@ void Display::init(int width, int height)
 	renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 	texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STREAMING, width, height);
 
+	gladLoadGL();
+
 	context = SDL_GL_CreateContext(window);
-	int version = gladLoadGL((GLADloadfunc) SDL_GL_GetProcAddress);
-	printf("GL %d.%d\n", GLAD_VERSION_MAJOR(version), GLAD_VERSION_MINOR(version));
+	// int version = gladLoadGL();
+	// printf("GL %d.%d\n", GLAD_VERSION_MAJOR(version), GLAD_VERSION_MINOR(version));
 
 	glClearColor(0.7f, 0.9f, 0.1f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT);

@@ -1,14 +1,12 @@
 #pragma once
 
-#include <SDL2/SDL.h>
+#include "SDL2/SDL.h"
 #include <vector>
 
 #include "framebuffer.h"
 #include "shape.h"
 #include "input.h"
 
-#include <glad/gl.h>
-#include <SDL2/SDL_opengl.h>
 
 namespace luled
 {
