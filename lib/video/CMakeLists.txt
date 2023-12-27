@@ -4,6 +4,12 @@ file(GLOB sources src/*.cpp)
 
 add_library(${PROJECT_NAME} SHARED ${sources})
 
-target_link_libraries(${PROJECT_NAME} PUBLIC ffmpeg::ffmpeg volk::volk vk-bootstrap::vk-bootstrap vulkan-memory-allocator::vulkan-memory-allocator)
+target_link_libraries(${PROJECT_NAME} PUBLIC 
+	vk-bootstrap::vk-bootstrap 
+	vulkan-memory-allocator::vulkan-memory-allocator
+	ffmpeg::ffmpeg
+	Vulkan::Loader
+	vulkan-headers::vulkan-headers
+	glad::glad)
 
 target_include_directories(${PROJECT_NAME} PUBLIC inc)

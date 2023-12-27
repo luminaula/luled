@@ -42,12 +42,14 @@ class LuLedRecipe(ConanFile):
         self.requires('sdl/2.28.5')
         self.requires('glfw/3.3.8')
         self.requires('vk-bootstrap/0.7')
-        self.requires('volk/1.3.268.0')
-        # self.requires('vulkan-validationlayers/1.3.239.0')
+        # self.requires('qt/6.6.1')
+        self.requires('freetype/2.13.2', override=True)
+        self.requires('xkbcommon/1.6.0', override=True)
+        # self.requires('vulkan-validationlayers/1.3.239.0', force=True)
         self.requires('vulkan-headers/1.3.268.0', force=True)
         self.requires('vulkan-loader/1.3.268.0', force=True)
         self.requires('vulkan-memory-allocator/cci.20231120')
-        self.requires('ffmpeg/6.1')
+        self.requires('ffmpeg/6.1', force=True)
         self.requires('glad/0.1.36')
         
     
@@ -64,7 +66,6 @@ class LuLedRecipe(ConanFile):
 
     def build_requirements(self):
         self.tool_requires('cmake/3.27.7')
-        self.tool_requires('ninja/1.11.1')
         
     def build(self):
         cmake = CMake(self)
