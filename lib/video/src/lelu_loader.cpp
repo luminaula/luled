@@ -4,6 +4,7 @@
 
 #include "vulkan/vulkan.hpp"
 #include "vulkan/vulkan_video.hpp"
+#include "GLFW/glfw3.h"
 
 #include "VkBootstrap.h"
 
@@ -18,6 +19,8 @@ struct LeLuLoader::Impl
 	vk::Queue computeQueue;
 	vk::Queue transferQueue;
 	vk::Queue graphicsQueue;
+	GLFWwindow* window;
+	VkSurfaceKHR surface;
 
 	vkb::Instance vkbInstance;
 	vkb::InstanceBuilder builder;
@@ -45,7 +48,6 @@ struct LeLuLoader::Impl
 
 		builder.set_app_name("lelu")
 			.set_engine_name("lelu Engine")
-			.set_headless()
 			.request_validation_layers()
 			.require_api_version(1, 3, 0)
 			.use_default_debug_messenger();
@@ -58,11 +60,31 @@ struct LeLuLoader::Impl
 		}
 
 		vkbInstance = inst_ret.value();
+		instance = vkbInstance.instance;
+
+		if(!glfwInit())
+		{
+			std::cerr << "Could not initialize GLFW" << std::endl;
+		}
+
+		glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
+		window = glfwCreateWindow(640, 480, "Luled vk", NULL, NULL);
+
+		if(!window)
+		{
+			std::cerr << "Could not create a GLFW window" << std::endl;
+		}
+
+		if(glfwCreateWindowSurface(instance, window, NULL, &surface) != VK_SUCCESS)
+		{
+			std::cerr << "Could not create a Vulkan surface" << std::endl;
+		}
 
 		vkb::PhysicalDeviceSelector selector{ vkbInstance };
 
 		auto phys_ret = selector.set_minimum_version(1, 3)
 			.add_required_extensions(extensions)
+			.set_surface(surface)
 			.select();
 
 		if(!phys_ret)
@@ -102,7 +124,6 @@ struct LeLuLoader::Impl
 			std::cerr << "Could not get a graphics queue: " << graphics_queue_ret.error().message() << std::endl;
 		}
 
-		instance = vkbInstance.instance;
 		device = vkbDevice.device;
 		computeQueue = compute_queue_ret.value();
 		transferQueue = transfer_queue_ret.value();
@@ -114,12 +135,16 @@ struct LeLuLoader::Impl
 
 		commandPool = device.createCommandPool(commandPoolInfo);
 
+		while(1);
 	}
 
 	~Impl()
 	{
 		device.destroyCommandPool(commandPool);
 		vkb::destroy_device(vkbDevice);
+		vkDestroySurfaceKHR(instance, surface, nullptr);
+		glfwDestroyWindow(window);
+		glfwTerminate();
 		vkb::destroy_instance(vkbInstance);
 
 	}

@@ -66,14 +66,14 @@ class LuLedRecipe(ConanFile):
         'glad*:spec':'gl',
         'glad*:gl_version':'4.6',
         'glad*:gl_profile':'core',
-        'vulkan-loader*:with_wsi_xcb':False,
-        'vulkan-loader*:with_wsi_xlib':False,
-        'vulkan-loader*:with_wsi_wayland':False,
+        'vulkan-loader*:with_wsi_xcb':True,
+        'vulkan-loader*:with_wsi_xlib':True,
+        'vulkan-loader*:with_wsi_wayland':True,
         'vulkan-loader*:with_wsi_directfb':False,
     }
 
     def requirements(self):
-        self.requires('opencv/4.8.1')
+        # self.requires('opencv/4.8.1')
         self.requires('spirv-tools/1.3.268.0', force=True)
         self.requires('spirv-headers/1.3.268.0', force=True)
         self.requires('nv-codec-headers/12.0.16.0')

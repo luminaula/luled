@@ -10,6 +10,7 @@ target_link_libraries(${PROJECT_NAME} PUBLIC
 	ffmpeg::ffmpeg
 	Vulkan::Loader
 	vulkan-headers::vulkan-headers
-	glad::glad)
+	glad::glad
+	glfw)
 
 target_include_directories(${PROJECT_NAME} PUBLIC inc)

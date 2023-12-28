@@ -61,76 +61,79 @@ void worker(
 
 int main(int, char**)
 {
-	foo_decode();
 
-	LeLuLoader leluLoader;
-	Display display(2560, 1440);
-
-	MandelReal zoom = 46.450;//0.25f;
-	MandelReal zoomPerFrame = 1.00f;
-	MandelReal xPerFrame = 0.0f;
-	MandelReal yPerFrame = 0.0f;
-
-	MandelReal multiplier = 1.0f;
-
-	display.input->addKeyCb_multiply(SDLK_q, std::ref(zoomPerFrame), 1.01);
-	display.input->addKeyCb_multiply(SDLK_a, std::ref(zoomPerFrame), 0.999);
-	display.input->addKeyCb_add(SDLK_UP, std::ref(yPerFrame), -0.001);
-	display.input->addKeyCb_add(SDLK_DOWN, std::ref(yPerFrame), 0.001);
-	display.input->addKeyCb_add(SDLK_RIGHT, std::ref(xPerFrame), 0.001);
-	display.input->addKeyCb_add(SDLK_LEFT, std::ref(xPerFrame), -0.001);
-
-	display.input->addKeyCb_multiply(SDLK_1, std::ref(multiplier), 2.);
-	display.input->addKeyCb_multiply(SDLK_2, std::ref(multiplier), 3.);
-	display.input->addKeyCb_multiply(SDLK_3, std::ref(multiplier), 4.);
-	display.input->addKeyCb_multiply(SDLK_4, std::ref(multiplier), 5.);
-
-	display.input->addKeyCb_ignoreRelease(SDLK_w);
-
-	std::pair<MandelReal, MandelReal> center = {-0.732613, 0.212312};//{-0.1528f, 1.0397};
-
-	std::jthread workerThread(
-		worker,
-		std::reference_wrapper<FrameBuffer>(display.frameBuffer()),
-		std::ref(zoom),
-		std::ref(zoomPerFrame),
-		std::ref(center),
-		std::ref(xPerFrame),
-		std::ref(yPerFrame),
-		std::ref(multiplier)
-	);
-
-	while(!display.pollEvents_isClosed())
+	if(1)
 	{
-		//const uint32_t frameStart = SDL_GetTicks();
-		counter2++;
-
-		//display.pollEvents();
-
-		display.update();
-
-		//std::cout << counter - counter2 << std::endl;
-
-		zoom *= std::pow(zoomPerFrame, multiplier);;
-		center.first += xPerFrame / zoom * multiplier;
-		center.second += yPerFrame / zoom * multiplier;
-
-		//calculate and cout fps
-		static auto lastTime = std::chrono::steady_clock::now();
-		static int frames = 0;
-		auto currentTime = std::chrono::steady_clock::now();
-		frames++;
-		if(std::chrono::duration_cast<std::chrono::milliseconds>(currentTime - lastTime).count() > 1000)
-		{
-			std::cout << "FPS: " << frames << std::endl;
-			frames = 0;
-			lastTime = currentTime;
-
-			//std::cout << "Zoom: " << zoom << std::endl;
-			//std::cout << "Center: " << center.first << ", " << center.second << std::endl;
-		}
-
+		LeLuLoader leluLoader;
+		return 0;
 	}
+	// Display display(2560, 1440);
+
+	// MandelReal zoom = 46.450;//0.25f;
+	// MandelReal zoomPerFrame = 1.00f;
+	// MandelReal xPerFrame = 0.0f;
+	// MandelReal yPerFrame = 0.0f;
+
+	// MandelReal multiplier = 1.0f;
+
+	// display.input->addKeyCb_multiply(SDLK_q, std::ref(zoomPerFrame), 1.01);
+	// display.input->addKeyCb_multiply(SDLK_a, std::ref(zoomPerFrame), 0.999);
+	// display.input->addKeyCb_add(SDLK_UP, std::ref(yPerFrame), -0.001);
+	// display.input->addKeyCb_add(SDLK_DOWN, std::ref(yPerFrame), 0.001);
+	// display.input->addKeyCb_add(SDLK_RIGHT, std::ref(xPerFrame), 0.001);
+	// display.input->addKeyCb_add(SDLK_LEFT, std::ref(xPerFrame), -0.001);
+
+	// display.input->addKeyCb_multiply(SDLK_1, std::ref(multiplier), 2.);
+	// display.input->addKeyCb_multiply(SDLK_2, std::ref(multiplier), 3.);
+	// display.input->addKeyCb_multiply(SDLK_3, std::ref(multiplier), 4.);
+	// display.input->addKeyCb_multiply(SDLK_4, std::ref(multiplier), 5.);
+
+	// display.input->addKeyCb_ignoreRelease(SDLK_w);
+
+	// std::pair<MandelReal, MandelReal> center = {-0.732613, 0.212312};//{-0.1528f, 1.0397};
+
+	// std::jthread workerThread(
+	// 	worker,
+	// 	std::reference_wrapper<FrameBuffer>(display.frameBuffer()),
+	// 	std::ref(zoom),
+	// 	std::ref(zoomPerFrame),
+	// 	std::ref(center),
+	// 	std::ref(xPerFrame),
+	// 	std::ref(yPerFrame),
+	// 	std::ref(multiplier)
+	// );
+
+	// while(!display.pollEvents_isClosed())
+	// {
+	// 	//const uint32_t frameStart = SDL_GetTicks();
+	// 	counter2++;
+
+	// 	//display.pollEvents();
+
+	// 	display.update();
+
+	// 	//std::cout << counter - counter2 << std::endl;
+
+	// 	zoom *= std::pow(zoomPerFrame, multiplier);;
+	// 	center.first += xPerFrame / zoom * multiplier;
+	// 	center.second += yPerFrame / zoom * multiplier;
+
+	// 	//calculate and cout fps
+	// 	static auto lastTime = std::chrono::steady_clock::now();
+	// 	static int frames = 0;
+	// 	auto currentTime = std::chrono::steady_clock::now();
+	// 	frames++;
+	// 	if(std::chrono::duration_cast<std::chrono::milliseconds>(currentTime - lastTime).count() > 1000)
+	// 	{
+	// 		std::cout << "FPS: " << frames << std::endl;
+	// 		frames = 0;
+	// 		lastTime = currentTime;
+
+	// 		//std::cout << "Zoom: " << zoom << std::endl;
+	// 		//std::cout << "Center: " << center.first << ", " << center.second << std::endl;
+	// 	}
+
+	// }
 
 	return EXIT_SUCCESS;
 }
