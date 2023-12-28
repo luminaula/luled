@@ -5,49 +5,34 @@
 #include "vulkan/vulkan.h"
 #include "vulkan/vulkan.hpp"
 
+#include "VkBootstrap.h"
+
 namespace luled
 {
 
 struct LeLuLoader::Impl
 {
-	vk::Instance instance;
-	vk::PhysicalDevice physicalDevice;
-	vk::Device device;
-	vk::Queue queue;
-	vk::CommandPool commandPool;
-	vk::CommandBuffer commandBuffer;
-	vk::Fence fence;
-	vk::Semaphore semaphore;
-	vk::Image image;
+
+	vkb::InstanceBuilder builder;
 
 	Impl()
 	{
-		instance = vk::createInstance({});
+		vkb::InstanceBuilder builder;
+		auto inst_ret = builder.set_app_name("lelu")
+			.request_validation_layers()
+			.require_api_version(1, 3, 0)
+			.use_default_debug_messenger()
+			.build();
 
-		std::vector<vk::PhysicalDevice> physicalDevices = instance.enumeratePhysicalDevices();
+		vkb::PhysicalDeviceSelector selector{ inst_ret.value() };
 
-		// Print device names
-		for (const auto& physicalDevice : physicalDevices)
-		{
-			vk::PhysicalDeviceProperties properties = physicalDevice.getProperties();
-			std::cout << properties.deviceName << std::endl;
-		}
+		auto phys_ret = selector.set_minimum_version(1, 1)
+			.set_minimum_version(1, 2)
+			.require_dedicated_transfer_queue ()
+			.select();
 
-		physicalDevice = physicalDevices[0]; // Select the first physical device for simplicity
-
-		device = physicalDevice.createDevice({});
-
-		queue = device.getQueue(0, 0); // Get the first queue family and the first queue in that family
-
-		vk::CommandPoolCreateInfo commandPoolCreateInfo;
-		commandPoolCreateInfo.queueFamilyIndex = 0; // Use the first queue family
-		commandPool = device.createCommandPool(commandPoolCreateInfo);
-
-		vk::CommandBufferAllocateInfo commandBufferAllocateInfo;
-		commandBufferAllocateInfo.commandPool = commandPool;
-		commandBufferAllocateInfo.level = vk::CommandBufferLevel::ePrimary;
-		commandBufferAllocateInfo.commandBufferCount = 1;
-		commandBuffer = device.allocateCommandBuffers(commandBufferAllocateInfo)[0];
+		// vkb::DeviceBuilder deviceBuilder{ inst_ret.value() };
+		// vkb::Device vkbDevice = deviceBuilder.build().value();
 
 	}
 
