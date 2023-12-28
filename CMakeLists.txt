@@ -9,6 +9,7 @@ set(CMAKE_CXX_STANDARD 20)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
+find_package(OpenCV)
 find_package(SPIRV-Tools)
 find_package(SPIRV-Headers)
 find_package(nv-codec-headers)
